@@ -41,14 +41,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      backgroundColor:
-          Theme.of(
-            context,
-          ).colorScheme.secondary, // Cambia esto al color que prefieras
+      backgroundColor: Theme.of(context).colorScheme.secondary,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text('Bienvenido a tu editor de fotos'),
             ElevatedButton.icon(
               icon: Icon(
                 Icons.camera_alt,

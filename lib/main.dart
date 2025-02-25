@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.light, // Puede ser light o dark
           primary: const Color.fromARGB(255, 22, 17, 54), // Color principal
           onPrimary: Colors.white, // Texto sobre primary
-          secondary: Colors.deepOrangeAccent, // Color secundario
+          secondary: Colors.transparent, // Color secundario
           onSecondary: Colors.white, // Texto sobre fondo
           surface: const Color.fromARGB(
             255,

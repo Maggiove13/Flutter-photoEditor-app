@@ -9,7 +9,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_image_filters: ^0.0.25
   image_picker: ^1.1.2
+  path_provider: ^2.1.5
+  image: ^3.0.1
 
 dev_dependencies:
   flutter_test:

@@ -1,20 +1,54 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'screens/welcome.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(const MyApp());
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Image Picker'),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Photo Editor',
+      theme: ThemeData(
+        colorScheme: ColorScheme(
+          brightness: Brightness.light, // Puede ser light o dark
+          primary: const Color.fromARGB(255, 22, 17, 54), // Color principal
+          onPrimary: Colors.white, // Texto sobre primary
+          secondary: Colors.deepOrangeAccent, // Color secundario
+          onSecondary: Colors.white, // Texto sobre fondo
+          surface: const Color.fromARGB(
+            255,
+            22,
+            17,
+            54,
+          ), // Color de tarjetas, diálogos
+          onSurface: Colors.black, // Texto sobre superficie
+          error: Colors.red, // Color de errores
+          onError: Colors.white, // Texto sobre error
+        ),
+        useMaterial3: true,
+        // Personalización de los botones
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            backgroundColor: const Color.fromARGB(
+              255,
+              149,
+              158,
+              167,
+            ), // Color de fondo del botón
+            foregroundColor: Colors.white, // Color del texto del botón
+          ),
+        ),
       ),
-      body: const SizedBox(),
+      home: const WelcomeScreen(),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../filters/filters.dart'; // Los filtros
+import '../filters/filters.dart';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
@@ -46,9 +46,7 @@ class _EditScreenState extends State<EditScreen> {
 
       bool? success = await GallerySaver.saveImage(filePath);
       if (success == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Imagen guardada en la galería 📸")),
-        );
+        _showSaveDialog(); // Mostrar el mensaje en el centro de la pantalla
       } else {
         throw Exception("No se pudo guardar en la galería");
       }
@@ -58,6 +56,24 @@ class _EditScreenState extends State<EditScreen> {
         const SnackBar(content: Text("Error al guardar la imagen ❌")),
       );
     }
+  }
+
+  // Mostrar mensaje centrado en la pantalla
+  void _showSaveDialog() {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text("¡Imagen Guardada!"),
+            content: const Text("Tu imagen ha sido guardada en la galería 📸"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("OK"),
+              ),
+            ],
+          ),
+    );
   }
 
   @override
@@ -80,20 +96,24 @@ class _EditScreenState extends State<EditScreen> {
               ),
             ),
           ),
-          // Lista de filtros como miniaturas
-          Container(
-            height: 80, // Tamaño del contenedor de los filtros
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                _buildFilterThumbnail("Normal", null),
-                _buildFilterThumbnail("B/N", ColorFilters.greyscale),
-                _buildFilterThumbnail("Sepia", ColorFilters.sepia),
-                _buildFilterThumbnail("Invertir", ColorFilters.invert),
-              ],
+          const SizedBox(height: 10),
+          // Lista de filtros centrados
+          Center(
+            child: SizedBox(
+              height: 90,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                children: [
+                  _buildFilterThumbnail("Normal", null),
+                  _buildFilterThumbnail("B/N", ColorFilters.greyscale),
+                  _buildFilterThumbnail("Sepia", ColorFilters.sepia),
+                  _buildFilterThumbnail("Invertir", ColorFilters.invert),
+                ],
+              ),
             ),
           ),
+          const SizedBox(height: 10),
           // Botón de Guardar
           Padding(
             padding: const EdgeInsets.all(10.0),

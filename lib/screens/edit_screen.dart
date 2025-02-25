@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../filters/filters.dart'; // Importa los filtros
+import '../filters/filters.dart'; // los filtros
 import 'dart:typed_data';
-import 'dart:ui' as ui; // Import necesario
+import 'dart:ui' as ui; 
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
 

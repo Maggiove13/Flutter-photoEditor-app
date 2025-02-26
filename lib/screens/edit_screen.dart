@@ -80,7 +80,7 @@ class _EditScreenState extends State<EditScreen> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return ErrorDialog(
+          return const ErrorDialog(
             message: 'No se pudo guardar la imagen:\n${e.toString()}',
           );
         },

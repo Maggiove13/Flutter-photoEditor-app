@@ -16,17 +16,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme(
           brightness: Brightness.light, // Puede ser light o dark
-          primary: const Color.fromARGB(255, 22, 17, 54), // Color principal
+          primary: const Color(0xFF191921), // Color principal
           onPrimary: Colors.white, // Texto sobre primary
-          secondary: Colors.transparent, // Color secundario
-          onSecondary: Colors.white, // Texto sobre fondo
-          surface: const Color.fromARGB(
-            255,
-            22,
-            17,
-            54,
-          ), // Color de tarjetas, diálogos
-          onSurface: Colors.black, // Texto sobre superficie
+          secondary: Colors.white, // Color secundario
+          onSecondary: const Color(0xFF292D38), // Texto sobre fondo
+          surface: const Color(0xFF191921), // fondo Scaffold
+          onSurface: const Color(0xFFff4d63), // Texto sobre el scaffold
           error: Colors.red, // Color de errores
           onError: Colors.white, // Texto sobre error
         ),
@@ -38,13 +33,8 @@ class MyApp extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
-            backgroundColor: const Color.fromARGB(
-              255,
-              149,
-              158,
-              167,
-            ), // Color de fondo del botón
-            foregroundColor: Colors.white, // Color del texto del botón
+            backgroundColor: const Color(0xFFff4d63),
+            foregroundColor: Colors.white, //color del texto del boton
           ),
         ),
       ),

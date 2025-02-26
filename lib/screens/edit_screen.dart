@@ -6,10 +6,11 @@ import '../filters/filters.dart';
 import 'dart:ui' as ui;
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
+import '../widgets/dialogs.dart'; // Importa el archivo de diálogos
 
 class EditScreen extends StatefulWidget {
   final File imagePath;
-
+  //constructor
   const EditScreen({super.key, required this.imagePath});
 
   @override
@@ -29,8 +30,9 @@ class _EditScreenState extends State<EditScreen> {
 
   // Función para guardar la imagen editada en la galería
   void _saveImage(BuildContext context) async {
+    if (!mounted) return;
+
     try {
-      // Mostrar un indicador de carga mientras procesamos la imagen
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -56,89 +58,30 @@ class _EditScreenState extends State<EditScreen> {
 
       final bool? success = await GallerySaver.saveImage(file.path);
 
-      // Cerrar el indicador de carga
+      if (!mounted) return;
+
       Navigator.of(context).pop();
 
       if (success == true) {
-        // Mostrar el diálogo de éxito
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              title: const Text(
-                '¡Éxito!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 22, 17, 54),
-                ),
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.check_circle, color: Colors.green, size: 64),
-                  const SizedBox(height: 16),
-                  const Text(
-                    '¡Tu imagen ha sido guardada en la galería!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
-              actions: [
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('¡Genial!'),
-                  ),
-                ),
-              ],
+            return const SuccessDialog(
+              message: '¡Tu imagen ha sido guardada en la galería!',
             );
           },
         );
       }
     } catch (e) {
-      // Cerrar el indicador de carga si ocurre un error
+      if (!mounted) return;
+
       Navigator.of(context, rootNavigator: true).pop();
 
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            title: const Text(
-              'Error',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.error_outline, color: Colors.red, size: 64),
-                const SizedBox(height: 16),
-                Text(
-                  'No se pudo guardar la imagen:\n${e.toString()}',
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-            actions: [
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Entendido'),
-                ),
-              ),
-            ],
+          return ErrorDialog(
+            message: 'No se pudo guardar la imagen:\n${e.toString()}',
           );
         },
       );
@@ -204,9 +147,12 @@ class _EditScreenState extends State<EditScreen> {
               width: 60,
               height: 60,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(3),
                 border: Border.all(
-                  color: _selectedFilter == filter ? Colors.blue : Colors.grey,
+                  color:
+                      _selectedFilter == filter
+                          ? Theme.of(context).colorScheme.onSurface
+                          : Colors.grey,
                   width: 2,
                 ),
               ),

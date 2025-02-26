@@ -22,3 +22,11 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+  - images/imagen4.webp
+
+  fonts:
+    - family: Anton
+      fonts: 
+      - asset: fonts/Anton-Regular.ttf

@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../filters/filters.dart';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:gallery_saver_plus/gallery_saver.dart';
+import '../filters/filters.dart';
+import 'dart:ui' as ui;
+import 'dart:typed_data';
+import 'package:path_provider/path_provider.dart';
 
 class EditScreen extends StatefulWidget {
   final File imagePath;
@@ -17,156 +17,208 @@ class EditScreen extends StatefulWidget {
 }
 
 class _EditScreenState extends State<EditScreen> {
-  final _globalKey = GlobalKey();
-  ColorFilter? _selectedFilter;
+  final GlobalKey _globalKey = GlobalKey(); // Para capturar la imagen editada
+  ColorFilter _selectedFilter = ColorFilters.none; // Filtro por defecto
 
-  void applyFilter(ColorFilter? filter) {
+  // Función para aplicar filtros
+  void applyFilter(ColorFilter filter) {
     setState(() {
       _selectedFilter = filter;
     });
   }
 
-  // Guardar imagen editada en la galería
-  Future<void> _saveEditedImage() async {
+  // Función para guardar la imagen editada en la galería
+  void _saveImage(BuildContext context) async {
     try {
+      // Mostrar un indicador de carga mientras procesamos la imagen
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(child: CircularProgressIndicator());
+        },
+      );
+
       RenderRepaintBoundary boundary =
           _globalKey.currentContext!.findRenderObject()
               as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage();
+
+      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
       ByteData? byteData = await image.toByteData(
         format: ui.ImageByteFormat.png,
       );
       Uint8List pngBytes = byteData!.buffer.asUint8List();
 
-      Directory directory = await getTemporaryDirectory();
-      String filePath = '${directory.path}/edited_image.png';
-
-      File file = File(filePath);
+      final directory = await getApplicationDocumentsDirectory();
+      final filePath = '${directory.path}/edited_image.png';
+      final file = File(filePath);
       await file.writeAsBytes(pngBytes);
 
-      bool? success = await GallerySaver.saveImage(filePath);
+      final bool? success = await GallerySaver.saveImage(file.path);
+
+      // Cerrar el indicador de carga
+      Navigator.of(context).pop();
+
       if (success == true) {
-        _showSaveDialog(); // Mostrar el mensaje en el centro de la pantalla
-      } else {
-        throw Exception("No se pudo guardar en la galería");
+        // Mostrar el diálogo de éxito
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              title: const Text(
+                '¡Éxito!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 22, 17, 54),
+                ),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green, size: 64),
+                  const SizedBox(height: 16),
+                  const Text(
+                    '¡Tu imagen ha sido guardada en la galería!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+              actions: [
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('¡Genial!'),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
       }
     } catch (e) {
-      print("Error al guardar la imagen: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Error al guardar la imagen ❌")),
-      );
-    }
-  }
+      // Cerrar el indicador de carga si ocurre un error
+      Navigator.of(context, rootNavigator: true).pop();
 
-  // Mostrar mensaje centrado en la pantalla
-  void _showSaveDialog() {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text("¡Imagen Guardada!"),
-            content: const Text("Tu imagen ha sido guardada en la galería 📸"),
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            title: const Text(
+              'Error',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.error_outline, color: Colors.red, size: 64),
+                const SizedBox(height: 16),
+                Text(
+                  'No se pudo guardar la imagen:\n${e.toString()}',
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
             actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text("OK"),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Entendido'),
+                ),
               ),
             ],
-          ),
-    );
+          );
+        },
+      );
+
+      print("Error detallado: $e");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Editar Imagen")),
+      appBar: AppBar(
+        title: const Text("Editar Imagen"),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Colors.white,
+      ),
       body: Column(
         children: [
           Expanded(
             child: RepaintBoundary(
               key: _globalKey,
               child: ColorFiltered(
-                colorFilter:
-                    _selectedFilter ??
-                    const ColorFilter.mode(
-                      Colors.transparent,
-                      BlendMode.multiply,
-                    ),
+                colorFilter: _selectedFilter,
                 child: Image.file(widget.imagePath),
               ),
             ),
           ),
-          const SizedBox(height: 10),
-          // Lista de filtros centrados
-          Center(
-            child: SizedBox(
-              height: 90,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                children: [
-                  _buildFilterThumbnail("Normal", null),
-                  _buildFilterThumbnail("B/N", ColorFilters.greyscale),
-                  _buildFilterThumbnail("Sepia", ColorFilters.sepia),
-                  _buildFilterThumbnail("Invertir", ColorFilters.invert),
-                ],
-              ),
+          // Contenedor de filtros centrado
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildFilterButton("Normal", ColorFilters.none),
+                _buildFilterButton("B/N", ColorFilters.greyscale),
+                _buildFilterButton("Sepia", ColorFilters.sepia),
+                _buildFilterButton("Invertir", ColorFilters.invert),
+              ],
             ),
           ),
-          const SizedBox(height: 10),
-          // Botón de Guardar
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: ElevatedButton.icon(
-              onPressed: _saveEditedImage,
-              icon: const Icon(Icons.save),
-              label: const Text("Guardar"),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 12,
-                  horizontal: 20,
-                ),
-                textStyle: const TextStyle(fontSize: 18),
-              ),
-            ),
+          const SizedBox(height: 20),
+          // Botón de guardar
+          ElevatedButton.icon(
+            icon: const Icon(Icons.save),
+            onPressed: () => _saveImage(context),
+            label: const Text("Guardar Imagen"),
           ),
+          const SizedBox(height: 20),
         ],
       ),
     );
   }
 
-  // Miniatura de cada filtro
-  Widget _buildFilterThumbnail(String label, ColorFilter? filter) {
-    return GestureDetector(
-      onTap: () => applyFilter(filter),
-      child: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 8),
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color:
-                    _selectedFilter == filter
-                        ? Colors.blue
-                        : Colors.transparent,
-                width: 2,
+  // Widget para crear los filtros como botones visuales
+  Widget _buildFilterButton(String name, ColorFilter filter) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: GestureDetector(
+        onTap: () => applyFilter(filter),
+        child: Column(
+          children: [
+            Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: _selectedFilter == filter ? Colors.blue : Colors.grey,
+                  width: 2,
+                ),
+              ),
+              child: ColorFiltered(
+                colorFilter: filter,
+                child: Image.file(widget.imagePath, fit: BoxFit.cover),
               ),
             ),
-            child: ColorFiltered(
-              colorFilter:
-                  filter ??
-                  const ColorFilter.mode(
-                    Colors.transparent,
-                    BlendMode.multiply,
-                  ),
-              child: Image.file(widget.imagePath, fit: BoxFit.cover),
-            ),
-          ),
-          Text(label, style: const TextStyle(fontSize: 12)),
-        ],
+            const SizedBox(height: 5),
+            Text(name, style: const TextStyle(fontSize: 12)),
+          ],
+        ),
       ),
     );
   }

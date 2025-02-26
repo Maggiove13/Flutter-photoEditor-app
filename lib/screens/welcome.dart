@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import './pick_image.dart'; // Importamos el helper
 import 'edit_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -11,21 +12,25 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  File? _selectedImage;
+  Future<void> _pickAndEditImage(ImageSource source) async {
+    File? selectedImage = await ImagePickerHelper.pickImage(context, source);
 
-  Future<void> _pickImage(ImageSource source) async {
-    final pickedFile = await ImagePicker().pickImage(source: source);
+    // Verificar si el widget todavía está montado antes de continuar
+    if (!mounted) return;
 
-    if (pickedFile != null) {
-      setState(() {
-        _selectedImage = File(pickedFile.path);
-      });
-
-      // Navegar a la pantalla de edición y pasar la imagen seleccionada
+    if (selectedImage != null) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => EditScreen(imagePath: _selectedImage!),
+          builder: (context) => EditScreen(imagePath: selectedImage),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Selección cancelada"),
+          duration: Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
         ),
       );
     }
@@ -35,34 +40,31 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Photo',
-          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+        title: const Text(
+          'Photo Editor',
+          style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      backgroundColor: Theme.of(context).colorScheme.secondary,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Bienvenido a tu editor de fotos'),
+            const Text(
+              'Bienvenido a tu editor de fotos',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 30),
             ElevatedButton.icon(
-              icon: Icon(
-                Icons.camera_alt,
-                color: Theme.of(context).colorScheme.surface,
-              ),
+              icon: const Icon(Icons.camera_alt),
               label: const Text("Tomar Foto"),
-              onPressed: () => _pickImage(ImageSource.camera),
+              onPressed: () => _pickAndEditImage(ImageSource.camera),
             ),
             const SizedBox(height: 20),
             ElevatedButton.icon(
-              icon: Icon(
-                Icons.image,
-                color: Theme.of(context).colorScheme.surface,
-              ),
+              icon: const Icon(Icons.image),
               label: const Text("Elegir de la Galería"),
-              onPressed: () => _pickImage(ImageSource.gallery),
+              onPressed: () => _pickAndEditImage(ImageSource.gallery),
             ),
           ],
         ),

@@ -40,34 +40,50 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Photo Editor',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          'Photo Editor app',
+          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Bienvenido a tu editor de fotos',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Imagen de fondo
+          Image.asset('images/imagen4.webp', fit: BoxFit.cover),
+          // Contenido de la pantalla
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Text(
+                    'Bienvenido a tu editor de fotos',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      fontFamily: 'Anton',
+                      fontSize: 45,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.camera_alt),
+                  label: const Text("Tomar Foto"),
+                  onPressed: () => _pickAndEditImage(ImageSource.camera),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.image),
+                  label: const Text("Elegir de la Galería"),
+                  onPressed: () => _pickAndEditImage(ImageSource.gallery),
+                ),
+              ],
             ),
-            const SizedBox(height: 30),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.camera_alt),
-              label: const Text("Tomar Foto"),
-              onPressed: () => _pickAndEditImage(ImageSource.camera),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.image),
-              label: const Text("Elegir de la Galería"),
-              onPressed: () => _pickAndEditImage(ImageSource.gallery),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

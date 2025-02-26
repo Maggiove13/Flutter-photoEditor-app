@@ -6,7 +6,7 @@ import '../filters/filters.dart';
 import 'dart:ui' as ui;
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
-import '../widgets/dialogs.dart'; // Importa el archivo de diálogos
+import '../widgets/dialogs.dart';
 
 class EditScreen extends StatefulWidget {
   final File imagePath;

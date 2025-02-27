@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter/rendering.dart'; //para manipular la representación visual de los widgets.
 import 'package:gallery_saver_plus/gallery_saver.dart';
 import '../filters/filters.dart';
-import 'dart:ui' as ui;
-import 'dart:typed_data';
+import 'dart:ui'
+    as ui; //proporciona acceso a APIs para como la manipulación de imágenes.
+import 'dart:typed_data'; //Para trabajar datos binarios
 import 'package:path_provider/path_provider.dart';
 import '../widgets/dialogs.dart';
 
@@ -37,7 +38,13 @@ class _EditScreenState extends State<EditScreen> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+          );
         },
       );
 

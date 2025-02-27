@@ -40,7 +40,7 @@ class SuccessDialog extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text('¡Genial!'),
+            child: const Text('Genial!'),
           ),
         ),
       ],

@@ -52,21 +52,34 @@ class _EditScreenState extends State<EditScreen> {
           _globalKey.currentContext!.findRenderObject()
               as RenderRepaintBoundary;
 
+      // Convertimos el objeto en una imagen
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+
+      // Convertimos la imagen a una secuencia de bytes
       ByteData? byteData = await image.toByteData(
         format: ui.ImageByteFormat.png,
       );
+      // Extraemos la información binaria en una lista de bytes
       Uint8List pngBytes = byteData!.buffer.asUint8List();
 
+      // Obtenemos la carpeta donde se guardan los archivos en el cel
       final directory = await getApplicationDocumentsDirectory();
-      final filePath = '${directory.path}/edited_image.png';
-      final file = File(filePath);
-      await file.writeAsBytes(pngBytes);
 
+      // Creamos la ruta donde se almacenará la imagen
+      final filePath = '${directory.path}/edited_image.png';
+
+      //Se convierte a objeto file para poder escrbir en el
+      final file = File(filePath);
+
+      //Escribe los bytes al file
+      await file.writeAsBytes(pngBytes); //recibe una lista de bytes
+
+      //Guardamos la imagen en la galería del teléfono.
       final bool? success = await GallerySaver.saveImage(file.path);
 
       if (!mounted) return;
 
+      //Cierra el mesaje de carga de imagen
       Navigator.of(context).pop();
 
       if (success == true) {
@@ -117,8 +130,7 @@ class _EditScreenState extends State<EditScreen> {
             ),
           ),
           // Contenedor de filtros centrado
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
+          Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -159,7 +171,7 @@ class _EditScreenState extends State<EditScreen> {
                   color:
                       _selectedFilter == filter
                           ? Theme.of(context).colorScheme.onSurface
-                          : Colors.grey,
+                          : Theme.of(context).colorScheme.secondary,
                   width: 2,
                 ),
               ),
@@ -169,7 +181,13 @@ class _EditScreenState extends State<EditScreen> {
               ),
             ),
             const SizedBox(height: 5),
-            Text(name, style: const TextStyle(fontSize: 12)),
+            Text(
+              name,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
+                fontSize: 12,
+              ),
+            ),
           ],
         ),
       ),

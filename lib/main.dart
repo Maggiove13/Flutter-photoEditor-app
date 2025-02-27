@@ -18,10 +18,12 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.light, // Puede ser light o dark
           primary: const Color(0xFF191921), // Color principal
           onPrimary: Colors.white, // Texto sobre primary
-          secondary: Colors.white, // Color secundario
+          secondary: Colors.grey, // Color secundario
           onSecondary: const Color(0xFF292D38), // Texto sobre fondo
           surface: const Color(0xFF191921), // fondo Scaffold
-          onSurface: const Color(0xFFff4d63), // Texto sobre el scaffold
+          onSurface: const Color(
+            0xFF16558c,
+          ), // Texto sobre el scaffold 0xFF517384
           error: Colors.red, // Color de errores
           onError: Colors.white, // Texto sobre error
         ),
@@ -33,7 +35,7 @@ class MyApp extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
-            backgroundColor: const Color(0xFFff4d63),
+            backgroundColor: const Color(0xFF517384),
             foregroundColor: Colors.white, //color del texto del boton
           ),
         ),

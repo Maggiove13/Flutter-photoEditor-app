@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io'; //permite gestionar archivos
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import './pick_image.dart'; // Importamos el helper
@@ -30,7 +30,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         const SnackBar(
           content: Text("Selección cancelada"),
           duration: Duration(seconds: 2),
-          behavior: SnackBarBehavior.floating,
+          behavior:
+              SnackBarBehavior
+                  .floating, // va estar por encima de los demas widgets
         ),
       );
     }
@@ -47,6 +49,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: Stack(
+        //para que los hijos ocupen todo el espacio disponible
         fit: StackFit.expand,
         children: [
           // Imagen de fondo

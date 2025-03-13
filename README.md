@@ -37,11 +37,12 @@ The application uses the following Flutter dependencies:
 - **gallery_saver_plus**: To save images to the device's gallery.
 - **path_provider**: To get paths to directories on the device.
 
-These dependencies are configured in the pubspec.yaml file. To install them, run:
 
-    ````bash Copy
-    flutter pub get
-    ````
+    **- These dependencies are configured in the pubspec.yaml file. To install them, run:**
+
+    ```bash Copy
+        flutter pub get
+    ```
 
 ## Application Features
 #### Welcome screen
@@ -71,21 +72,21 @@ If you want to use this project on your local machine, follow these steps:
 1. Clone the Repository
 First, clone the repository from GitHub to your local machine. Open a terminal and run the following command:
 
-    ````bash Copy
+    ```bash Copy
     git clone https://github.com/Maggiove13/photo-editor.git 
-    ````
+    ```
 2. Navigate to the Project Directory
 Once you have cloned the repository, navigate to the project directory:
 
-    ````bash Copy
+    ```bash Copy
     cd photo-editor
-    ```` 
+    ```
 3. Installing Dependencies
 The project uses several Flutter dependencies. To install them, run:
 
-    ````bash Copy
+    ```bash Copy
     flutter pub get
-    ````   
+    ```   
 This command will download and install all necessary dependencies defined in the pubspec.yaml file.
 
 4.  Run the Application
@@ -103,9 +104,9 @@ Now that the project is set up, you can run the application on a physical device
     
     5- Run the following command in the terminal:
     
-    ````bash Copy
+    ```bash Copy
     flutter run
-    ````
+    ```
     
     The application will be installed and run on your Android device.
 
@@ -115,9 +116,9 @@ Now that the project is set up, you can run the application on a physical device
     
     2- Run the application with:
     
-    ````bash Copy
+    ```bash Copy
     flutter run
-    ````
+    ```
     
     #### On iPhone (iOS)
     
@@ -131,9 +132,9 @@ Now that the project is set up, you can run the application on a physical device
     
     5- Run the following command in the terminal:
     
-    ````bash Copy
+    ```bash Copy
     flutter run
-    ````
+    ```
     The application will be installed and run on your iPhone.
     
     #### Use a simulator:
@@ -142,8 +143,7 @@ Now that the project is set up, you can run the application on a physical device
     
     2- Run the application with:
     
-    ````bash Copy
+    ```bash Copy
     flutter run
-    ````
-
+    ```
 
